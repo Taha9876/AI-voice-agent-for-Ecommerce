@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { MessageSquare, Send, Bot, User } from "lucide-react"
+import { MessageSquare, Send, Bot, User, ArrowLeft } from "lucide-react"
 
 interface Message {
   id: string
@@ -62,7 +62,7 @@ export default function DemoPage() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
+        content: "Sorry, I encountered an error. Please try again or check your API configuration.",
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, errorMessage])
@@ -81,9 +81,17 @@ export default function DemoPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">AI Voice Agent Demo</h1>
-          <p className="text-slate-600 text-lg">Text-based demo - Voice features available on main page</p>
+        <div className="flex items-center gap-4 mb-8">
+          <Button asChild variant="outline">
+            <a href="/" className="flex items-center gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Voice Agent
+            </a>
+          </Button>
+          <div className="text-center flex-1">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2">AI Chat Demo</h1>
+            <p className="text-slate-600 text-lg">Text-based demo - Voice features available on main page</p>
+          </div>
         </div>
 
         <Card className="h-[600px] flex flex-col">
@@ -99,8 +107,23 @@ export default function DemoPage() {
               {messages.length === 0 ? (
                 <div className="text-center py-8 text-slate-500">
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Start a conversation with the AI assistant</p>
-                  <p className="text-xs mt-2">Try: "Hello", "Tell me a joke", or "What can you do?"</p>
+                  <p className="text-lg font-medium mb-2">Start a conversation with the AI assistant</p>
+                  <div className="text-sm space-y-1">
+                    <p>Try asking:</p>
+                    <div className="flex flex-wrap justify-center gap-2 mt-2">
+                      {["Hello!", "Tell me a joke", "What can you do?", "How's the weather?"].map((suggestion) => (
+                        <Button
+                          key={suggestion}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setInput(suggestion)}
+                          className="text-xs"
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 messages.map((message) => (
@@ -164,10 +187,11 @@ export default function DemoPage() {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-600 mb-4">
-            This is a text-based demo. For full voice features, visit the main page.
+            This is a text-based demo. For full voice features including speech recognition and text-to-speech, visit
+            the main page.
           </p>
-          <Button asChild>
-            <a href="/">Go to Voice Agent</a>
+          <Button asChild size="lg">
+            <a href="/">Try Full Voice Agent</a>
           </Button>
         </div>
       </div>

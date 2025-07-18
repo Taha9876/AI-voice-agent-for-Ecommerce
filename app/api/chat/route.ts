@@ -10,31 +10,58 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 })
     }
 
-    // Check if API key is available
-    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    // 1️⃣  Validate that a *real* key seems to be present
+    const GEMINI_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY
+
+    const looksValidKey =
+      GEMINI_KEY && // not undefined / empty
+      !GEMINI_KEY.startsWith("your_") && // not left as placeholder
+      !GEMINI_KEY.toLowerCase().includes("example") // not obviously fake
+
+    if (!looksValidKey) {
       return NextResponse.json(
         {
-          response: `I received your message: "${message}". However, the Google API key is not configured. Please add GOOGLE_GENERATIVE_AI_API_KEY to your environment variables to enable AI responses.`,
+          response:
+            `I received your message: "${message}". ` +
+            "Gemini is not configured with a valid API key, so I'm replying with a fallback message. " +
+            "Add GOOGLE_GENERATIVE_AI_API_KEY to your environment variables (Setup → Get API key) " +
+            "for full AI answers.",
         },
         { status: 200 },
       )
     }
 
-    const { text } = await generateText({
-      model: google("gemini-1.5-flash"),
-      system: `You are a helpful AI voice assistant. Keep your responses conversational, concise, and natural for voice interaction. Aim for responses that are 1-3 sentences long unless more detail is specifically requested. Be friendly and engaging.`,
-      prompt: message,
-    })
+    let aiText: string | null = null
+    try {
+      const { text } = await generateText({
+        model: google("gemini-1.5-flash"),
+        system: "You are a helpful AI voice assistant. Keep responses conversational and concise (1-3 sentences).",
+        prompt: message,
+      })
+      aiText = text
+    } catch (err: any) {
+      console.error("Gemini error:", err)
+      // Gemini rejected the key or hit rate-limit – fall back:
+      aiText = null
+    }
 
-    return NextResponse.json({ response: text })
+    if (!aiText) {
+      return NextResponse.json(
+        {
+          response:
+            `I couldn't reach Gemini (invalid key or quota). ` +
+            "Please double-check your GOOGLE_GENERATIVE_AI_API_KEY. " +
+            "Meanwhile, I'm still here to help – try switching to Groq on the main page!",
+        },
+        { status: 200 },
+      )
+    }
+
+    return NextResponse.json({ response: aiText })
   } catch (error) {
     console.error("Error in chat API:", error)
-    const message = "default message" // Declare the message variable here
-    return NextResponse.json(
-      {
-        response: `I received your message: "${message}". There was an error processing your request, but I'm still here to help! Please check your API configuration.`,
-      },
-      { status: 200 },
-    )
+    return NextResponse.json({
+      response: `I'm experiencing some technical difficulties with the AI service, but I'm still here to help! This might be due to API rate limits or configuration issues. Please try again in a moment.`,
+    })
   }
 }
