@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
-import { Globe, Server, Copy, ExternalLink, CheckCircle } from 'lucide-react'
+import { Globe, Server, Copy, ExternalLink, CheckCircle } from "lucide-react"
 
 export default function DeploymentSetupPage() {
   const [currentUrl, setCurrentUrl] = useState("")
@@ -37,14 +36,31 @@ export default function DeploymentSetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Deployment Setup</h1>
-          <p className="text-slate-600 text-lg">Configure your NEXT_PUBLIC_API_URL for different environments</p>
-        </div>
+        <h1 className="text-4xl font-bold text-center mb-8">Deployment Setup</h1>
 
-        <div className="grid gap-6">
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Environment Variable</h2>
+            <p className="text-gray-600 mb-4">Add this to your Vercel environment variables:</p>
+
+            <div className="bg-gray-900 text-white p-4 rounded-lg">
+              <code className="text-sm">NEXT_PUBLIC_API_URL=https://your-app.vercel.app</code>
+            </div>
+
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="font-semibold text-blue-900">Steps:</h3>
+              <ol className="list-decimal list-inside mt-2 text-blue-800 text-sm">
+                <li>Go to Vercel dashboard</li>
+                <li>Select your project</li>
+                <li>Go to Settings → Environment Variables</li>
+                <li>Add the variable above</li>
+                <li>Redeploy</li>
+              </ol>
+            </div>
+          </div>
+
           {/* What is NEXT_PUBLIC_API_URL */}
           <Card>
             <CardHeader>

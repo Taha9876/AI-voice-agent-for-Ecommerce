@@ -13,6 +13,16 @@ export async function GET(request: NextRequest) {
   // Generate the Shopify-specific embed script
   const embedScript = `
 (function() {
+  console.log('Shopify AI Voice Widget Loading...');
+  
+  const widget = document.createElement('div');
+  widget.innerHTML = '<div style="position:fixed;bottom:20px;right:20px;width:60px;height:60px;background:#10b981;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15);">🛍️</div>';
+  document.body.appendChild(widget);
+  
+  widget.onclick = function() {
+    alert('Shopify AI Assistant Ready! Ask me about products.');
+  };
+
   // Shopify-specific widget initialization
   const widgetContainer = document.createElement('div');
   widgetContainer.id = 'ai-voice-widget-shopify';

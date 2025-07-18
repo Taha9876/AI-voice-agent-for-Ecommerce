@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Mic, MicOff, Volume2, VolumeX, MessageSquare, Zap } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Mic, MicOff, Volume2, VolumeX, MessageSquare, Zap, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ProviderSelector } from "@/components/provider-selector"
 
@@ -13,7 +14,6 @@ interface Message {
   type: "user" | "assistant"
   content: string
   timestamp: Date
-  audioUrl?: string
 }
 
 export default function VoiceAgent() {
@@ -24,6 +24,7 @@ export default function VoiceAgent() {
   const [transcript, setTranscript] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [currentProvider, setCurrentProvider] = useState("gemini")
+  const [textInput, setTextInput] = useState("")
 
   const recognitionRef = useRef<any>(null)
 
@@ -146,6 +147,13 @@ export default function VoiceAgent() {
     }
   }
 
+  const handleTextSubmit = () => {
+    if (textInput.trim()) {
+      handleUserMessage(textInput)
+      setTextInput("")
+    }
+  }
+
   const generateSpeech = (text: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
       console.error("Speech Synthesis not supported in this browser")
@@ -222,7 +230,7 @@ export default function VoiceAgent() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-4">
               <Button
                 onClick={isListening ? stopListening : startListening}
                 disabled={isProcessing}
@@ -258,6 +266,21 @@ export default function VoiceAgent() {
               )}
             </div>
 
+            {/* Text Input Alternative */}
+            <div className="flex gap-2">
+              <Input
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleTextSubmit()}
+                placeholder="Or type your message here..."
+                disabled={isProcessing}
+                className="flex-1"
+              />
+              <Button onClick={handleTextSubmit} disabled={isProcessing || !textInput.trim()} size="icon">
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+
             {transcript && (
               <div className="mt-4 p-3 bg-slate-100 rounded-lg">
                 <p className="text-sm text-slate-600 mb-1">Current transcript:</p>
@@ -282,7 +305,7 @@ export default function VoiceAgent() {
             {messages.length === 0 ? (
               <div className="text-center py-8 text-slate-500">
                 <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Start a conversation by clicking "Start Listening"</p>
+                <p>Start a conversation by clicking "Start Listening" or typing a message</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -311,6 +334,34 @@ export default function VoiceAgent() {
             )}
           </CardContent>
         </Card>
+
+        {/* Quick Links */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Button asChild variant="outline" className="h-auto p-4 bg-transparent">
+            <a href="/setup" className="block text-center">
+              <div className="font-semibold">Setup Guide</div>
+              <div className="text-sm text-slate-600">Configure API keys</div>
+            </a>
+          </Button>
+          <Button asChild variant="outline" className="h-auto p-4 bg-transparent">
+            <a href="/demo" className="block text-center">
+              <div className="font-semibold">Demo Chat</div>
+              <div className="text-sm text-slate-600">Try text-based chat</div>
+            </a>
+          </Button>
+          <Button asChild variant="outline" className="h-auto p-4 bg-transparent">
+            <a href="/integration" className="block text-center">
+              <div className="font-semibold">Integration</div>
+              <div className="text-sm text-slate-600">Embed on websites</div>
+            </a>
+          </Button>
+          <Button asChild variant="outline" className="h-auto p-4 bg-transparent">
+            <a href="/test-api" className="block text-center">
+              <div className="font-semibold">Test API</div>
+              <div className="text-sm text-slate-600">Verify setup</div>
+            </a>
+          </Button>
+        </div>
       </div>
     </div>
   )

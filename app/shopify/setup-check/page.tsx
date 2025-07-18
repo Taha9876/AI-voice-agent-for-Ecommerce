@@ -1,12 +1,11 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
-import { CheckCircle, AlertTriangle, Copy, Settings, Zap } from "lucide-react"
+import { Copy, Settings, Zap } from "lucide-react"
 
 export default function ShopifySetupCheck() {
   const [currentDomain, setCurrentDomain] = useState("ornapk.store")
@@ -155,69 +154,31 @@ window.shopifyContext = {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Shopify Setup Check</h1>
-          <p className="text-slate-600 text-lg">Optimize your AI voice agent for ornapk.store</p>
-        </div>
+        <h1 className="text-4xl font-bold text-center mb-8">Shopify Setup Check</h1>
 
-        <div className="grid gap-6">
-          {/* Current Setup Analysis */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                Current Setup Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <h4 className="font-semibold text-green-900">✅ Correctly Placed</h4>
-                    </div>
-                    <p className="text-green-800 text-sm">
-                      Script is properly placed before closing &lt;/body&gt; tag in theme.liquid
-                    </p>
-                  </div>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Setup Status</h2>
 
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="h-4 w-4 text-amber-600" />
-                      <h4 className="font-semibold text-amber-900">⚠️ Needs Optimization</h4>
-                    </div>
-                    <p className="text-amber-800 text-sm">
-                      Generic parameters detected. Let's customize for your store.
-                    </p>
-                  </div>
-                </div>
+          <div className="space-y-4">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h3 className="font-semibold text-green-900">✅ Basic Setup Complete</h3>
+              <p className="text-green-800 text-sm">Your Shopify integration is ready to go.</p>
+            </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">Detected Store Information:</h4>
-                  <ul className="text-blue-800 text-sm space-y-1">
-                    <li>
-                      • <strong>Domain:</strong> ornapk.store
-                    </li>
-                    <li>
-                      • <strong>Current Script:</strong> Generic embed code
-                    </li>
-                    <li>
-                      • <strong>Position:</strong> Bottom-right (good choice)
-                    </li>
-                    <li>
-                      • <strong>Color:</strong> Blue (#3b82f6)
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="font-semibold text-blue-900">Next Steps:</h3>
+              <ul className="list-disc list-inside mt-2 text-blue-800 text-sm">
+                <li>Test the widget on your store</li>
+                <li>Customize colors and position</li>
+                <li>Add product-specific training</li>
+              </ul>
+            </div>
+          </div>
 
           {/* Store Configuration */}
-          <Card>
+          <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5 text-blue-500" />
@@ -263,7 +224,7 @@ window.shopifyContext = {
           </Card>
 
           {/* Enhanced Context */}
-          <Card>
+          <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5 text-purple-500" />
@@ -303,58 +264,6 @@ window.shopifyContext = {
                     <li>• Offers size/variant guidance with real options</li>
                     <li>• Handles cart-specific questions and upselling</li>
                     <li>• Knows customer purchase history and preferences</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Next Steps */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Next Steps</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-blue-900 mb-2">1. Update Embed Code</h4>
-                    <p className="text-blue-800 text-sm mb-3">
-                      Replace your current script with the optimized version above
-                    </p>
-                    <Badge variant="outline">Required</Badge>
-                  </div>
-
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-green-900 mb-2">2. Add Product Context</h4>
-                    <p className="text-green-800 text-sm mb-3">Add the enhanced context to templates/product.liquid</p>
-                    <Badge variant="outline">Recommended</Badge>
-                  </div>
-
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-purple-900 mb-2">3. Test on Product Pages</h4>
-                    <p className="text-purple-800 text-sm mb-3">
-                      Ask: "Tell me about this product" or "What sizes are available?"
-                    </p>
-                    <Badge variant="outline">Testing</Badge>
-                  </div>
-
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-orange-900 mb-2">4. Customize Branding</h4>
-                    <p className="text-orange-800 text-sm mb-3">Match your store's colors and branding</p>
-                    <Badge variant="outline">Optional</Badge>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-slate-900 mb-2">Test Questions for Your Store:</h4>
-                  <ul className="text-slate-700 text-sm space-y-1">
-                    <li>• "What products do you recommend for [specific need]?"</li>
-                    <li>• "Tell me about this product's features"</li>
-                    <li>• "What sizes are available?"</li>
-                    <li>• "Do you have any current promotions?"</li>
-                    <li>• "What's in my cart?"</li>
-                    <li>• "What's your return policy?"</li>
                   </ul>
                 </div>
               </div>

@@ -59,6 +59,13 @@ export default function DemoPage() {
       setMessages((prev) => [...prev, assistantMessage])
     } catch (error) {
       console.error("Error:", error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "assistant",
+        content: "Sorry, I encountered an error. Please try again.",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
@@ -76,7 +83,7 @@ export default function DemoPage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">AI Voice Agent Demo</h1>
-          <p className="text-slate-600 text-lg">Text-based demo while voice features are being set up</p>
+          <p className="text-slate-600 text-lg">Text-based demo - Voice features available on main page</p>
         </div>
 
         <Card className="h-[600px] flex flex-col">
@@ -93,6 +100,7 @@ export default function DemoPage() {
                 <div className="text-center py-8 text-slate-500">
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>Start a conversation with the AI assistant</p>
+                  <p className="text-xs mt-2">Try: "Hello", "Tell me a joke", or "What can you do?"</p>
                 </div>
               ) : (
                 messages.map((message) => (
@@ -155,11 +163,12 @@ export default function DemoPage() {
         </Card>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-600">
-            Voice features will be available once speech recognition is properly configured.
-            <br />
-            For now, you can test the AI chat functionality above.
+          <p className="text-sm text-slate-600 mb-4">
+            This is a text-based demo. For full voice features, visit the main page.
           </p>
+          <Button asChild>
+            <a href="/">Go to Voice Agent</a>
+          </Button>
         </div>
       </div>
     </div>

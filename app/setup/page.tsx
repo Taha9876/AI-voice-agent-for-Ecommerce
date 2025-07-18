@@ -12,7 +12,7 @@ export default function SetupPage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Setup Your AI Voice Agent</h1>
-          <p className="text-slate-600 text-lg">Get your free Gemini API key to power your voice agent</p>
+          <p className="text-slate-600 text-lg">Get your free API keys to power your voice agent</p>
         </div>
 
         <div className="grid gap-6">

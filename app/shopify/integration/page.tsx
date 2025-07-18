@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
-import { Copy, Code, Settings, ShoppingBag, Zap } from 'lucide-react'
+import { Copy, Code, Settings, ShoppingBag, Zap } from "lucide-react"
 
 export default function ShopifyIntegrationPage() {
   const [shopifyDomain, setShopifyDomain] = useState("your-store.myshopify.com")
@@ -17,7 +17,7 @@ export default function ShopifyIntegrationPage() {
   const [copied, setCopied] = useState(false)
 
   const generateShopifyEmbedCode = () => {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-voice-agent.vercel.app'
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://your-voice-agent.vercel.app"
     return `<!-- AI Voice Agent for Shopify -->
 <script>
 window.shopifyVoiceAgent = {
@@ -111,8 +111,11 @@ window.shopifyContext = {
     }
   }
 
+  const shopifyCode = `<!-- AI Voice Agent for Shopify -->
+<script src="https://your-domain.vercel.app/api/shopify/embed"></script>`
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Shopify Integration Guide</h1>
@@ -322,6 +325,21 @@ window.shopifyContext = {
                       </p>
                     </div>
                   </div>
+                </div>
+
+                {/* Shopify Code */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold mb-4">Shopify Code</h2>
+                  <div className="bg-gray-900 text-white p-4 rounded-lg">
+                    <code className="text-sm whitespace-pre">{shopifyCode}</code>
+                  </div>
+
+                  <button
+                    onClick={() => navigator.clipboard.writeText(shopifyCode)}
+                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Copy Shopify Code
+                  </button>
                 </div>
               </div>
             </CardContent>

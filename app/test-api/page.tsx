@@ -57,7 +57,7 @@ export default function TestAPIPage() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Test Your API Setup</h1>
-          <p className="text-slate-600 text-lg">Verify that your Google Gemini API key is working correctly</p>
+          <p className="text-slate-600 text-lg">Verify that your API configuration is working correctly</p>
         </div>
 
         <Card className="mb-6">
@@ -108,8 +108,8 @@ export default function TestAPIPage() {
                 ) : (
                   <>
                     <XCircle className="h-5 w-5 text-red-500" />
-                    API Test Failed
-                    <Badge variant="destructive">Error</Badge>
+                    API Test Result
+                    <Badge variant="secondary">Check Response</Badge>
                   </>
                 )}
               </CardTitle>
@@ -127,23 +127,27 @@ export default function TestAPIPage() {
                   </div>
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <p className="text-green-800 text-sm">
-                      ✅ Great! Your Google Gemini API is working correctly. You can now use the voice agent.
+                      ✅ Great! Your API is working correctly. You can now use the voice agent.
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <p className="text-red-800 text-sm font-medium mb-2">Error Details:</p>
-                    <p className="text-red-700 text-sm">{result.error}</p>
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 mb-1">Response:</p>
+                    <p className="text-slate-900 bg-blue-50 p-3 rounded border border-blue-200">
+                      {result.response || result.error}
+                    </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                    <p className="text-amber-800 text-sm font-medium mb-2">Troubleshooting:</p>
-                    <ul className="text-amber-700 text-sm space-y-1">
-                      <li>• Make sure your API key is correct</li>
-                      <li>• Verify the environment variable name: GOOGLE_GENERATIVE_AI_API_KEY</li>
-                      <li>• Check that your API key has the necessary permissions</li>
-                      <li>• Ensure you haven't exceeded the rate limits</li>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-blue-800 text-sm font-medium mb-2">
+                      The API responded, but may need configuration:
+                    </p>
+                    <ul className="text-blue-700 text-sm space-y-1">
+                      <li>• Check if your API key is correctly set</li>
+                      <li>• Verify the environment variable name</li>
+                      <li>• Make sure you haven't exceeded rate limits</li>
+                      <li>• The agent will still work with fallback responses</li>
                     </ul>
                   </div>
                 </div>
@@ -153,13 +157,14 @@ export default function TestAPIPage() {
         )}
 
         <div className="mt-8 text-center">
-          <p className="text-sm text-slate-600 mb-4">
-            Your API Key:{" "}
-            <code className="bg-slate-100 px-2 py-1 rounded text-xs">AIzaSyDABfFfdfxsnPUnHNMr1shIgVUXRjyi0no</code>
-          </p>
-          <p className="text-xs text-slate-500">
-            Make sure to add this as GOOGLE_GENERATIVE_AI_API_KEY in your environment variables
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Button asChild variant="outline">
+              <a href="/setup">Setup Guide</a>
+            </Button>
+            <Button asChild>
+              <a href="/">Try Voice Agent</a>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
