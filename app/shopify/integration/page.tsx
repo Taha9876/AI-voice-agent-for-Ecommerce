@@ -4,28 +4,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
-import { Copy, Code, Settings, ShoppingBag, Zap } from "lucide-react"
+import { Copy, Code, Settings, ShoppingBag, Zap } from 'lucide-react'
 
 export default function ShopifyIntegrationPage() {
   const [shopifyDomain, setShopifyDomain] = useState("your-store.myshopify.com")
   const [primaryColor, setPrimaryColor] = useState("#3b82f6")
   const [position, setPosition] = useState("bottom-right")
   const [assistantName, setAssistantName] = useState("AI Shopping Assistant")
+  const [copied, setCopied] = useState(false)
 
   const generateShopifyEmbedCode = () => {
-    const baseUrl = "https://your-voice-agent.vercel.app" // Replace with your actual domain
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-voice-agent.vercel.app'
     return `<!-- AI Voice Agent for Shopify -->
 <script>
-  window.shopifyVoiceAgent = {
-    apiUrl: '${baseUrl}',
-    config: {
-      name: '${assistantName}',
-      primaryColor: '${primaryColor}',
-      position: '${position}',
-      shopifyDomain: '${shopifyDomain}'
-    }
-  };
+window.shopifyVoiceAgent = {
+  apiUrl: '${baseUrl}',
+  config: {
+    name: '${assistantName}',
+    primaryColor: '${primaryColor}',
+    position: '${position}',
+    shopifyDomain: '${shopifyDomain}'
+  }
+};
 </script>
 <script src="${baseUrl}/api/shopify/embed" async></script>`
   }
@@ -33,73 +36,79 @@ export default function ShopifyIntegrationPage() {
   const generateLiquidContext = () => {
     return `<!-- Shopify Product Context (Add to product pages) -->
 <script>
-  window.shopifyContext = {
-    product: {
-      {% if product %}
-      id: {{ product.id }},
-      title: "{{ product.title | escape }}",
-      price: {{ product.price | money_without_currency }},
-      compare_price: {{ product.compare_at_price | money_without_currency }},
-      vendor: "{{ product.vendor | escape }}",
-      type: "{{ product.type | escape }}",
-      tags: [{% for tag in product.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
-      available: {{ product.available }},
-      variants: [
-        {% for variant in product.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          price: {{ variant.price | money_without_currency }},
-          available: {{ variant.available }},
-          inventory_quantity: {{ variant.inventory_quantity }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ],
-      images: [
-        {% for image in product.images %}
-        "{{ image | img_url: 'master' }}"{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-      {% endif %}
-    },
-    collection: {
-      {% if collection %}
-      title: "{{ collection.title | escape }}",
-      handle: "{{ collection.handle }}",
-      description: "{{ collection.description | escape }}"
-      {% endif %}
-    },
-    cart: {
-      item_count: {{ cart.item_count }},
-      total_price: {{ cart.total_price | money_without_currency }},
-      items: [
-        {% for item in cart.items %}
-        {
-          product_title: "{{ item.product.title | escape }}",
-          variant_title: "{{ item.variant.title | escape }}",
-          quantity: {{ item.quantity }},
-          price: {{ item.price | money_without_currency }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    },
-    customer: {
-      {% if customer %}
-      first_name: "{{ customer.first_name | escape }}",
-      email: "{{ customer.email | escape }}",
-      tags: [{% for tag in customer.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
-      {% else %}
-      logged_in: false
-      {% endif %}
-    },
-    page_type: "{{ request.page_type }}",
-    template: "{{ template }}"
-  };
+window.shopifyContext = {
+  product: {
+    {% if product %}
+    id: {{ product.id }},
+    title: "{{ product.title | escape }}",
+    price: {{ product.price | money_without_currency }},
+    compare_price: {{ product.compare_at_price | money_without_currency }},
+    vendor: "{{ product.vendor | escape }}",
+    type: "{{ product.type | escape }}",
+    tags: [{% for tag in product.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
+    available: {{ product.available }},
+    variants: [
+      {% for variant in product.variants %}
+      {
+        id: {{ variant.id }},
+        title: "{{ variant.title | escape }}",
+        price: {{ variant.price | money_without_currency }},
+        available: {{ variant.available }},
+        inventory_quantity: {{ variant.inventory_quantity }}
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ],
+    images: [
+      {% for image in product.images %}
+      "{{ image | img_url: 'master' }}"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+    {% endif %}
+  },
+  collection: {
+    {% if collection %}
+    title: "{{ collection.title | escape }}",
+    handle: "{{ collection.handle }}",
+    description: "{{ collection.description | escape }}"
+    {% endif %}
+  },
+  cart: {
+    item_count: {{ cart.item_count }},
+    total_price: {{ cart.total_price | money_without_currency }},
+    items: [
+      {% for item in cart.items %}
+      {
+        product_title: "{{ item.product.title | escape }}",
+        variant_title: "{{ item.variant.title | escape }}",
+        quantity: {{ item.quantity }},
+        price: {{ item.price | money_without_currency }}
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  },
+  customer: {
+    {% if customer %}
+    first_name: "{{ customer.first_name | escape }}",
+    email: "{{ customer.email | escape }}",
+    tags: [{% for tag in customer.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
+    {% else %}
+    logged_in: false
+    {% endif %}
+  },
+  page_type: "{{ request.page_type }}",
+  template: "{{ template }}"
+};
 </script>`
   }
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
   }
 
   return (
@@ -213,16 +222,17 @@ export default function ShopifyIntegrationPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Position</label>
-                    <select
-                      value={position}
-                      onChange={(e) => setPosition(e.target.value)}
-                      className="w-full p-2 border border-slate-300 rounded-md"
-                    >
-                      <option value="bottom-right">Bottom Right</option>
-                      <option value="bottom-left">Bottom Left</option>
-                      <option value="top-right">Top Right</option>
-                      <option value="top-left">Top Left</option>
-                    </select>
+                    <Select value={position} onValueChange={setPosition}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select position" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="bottom-right">Bottom Right</SelectItem>
+                        <SelectItem value="bottom-left">Bottom Left</SelectItem>
+                        <SelectItem value="top-right">Top Right</SelectItem>
+                        <SelectItem value="top-left">Top Left</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -275,15 +285,17 @@ export default function ShopifyIntegrationPage() {
                     </ol>
 
                     <div className="relative">
-                      <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg text-xs overflow-x-auto">
-                        <code>{generateShopifyEmbedCode()}</code>
-                      </pre>
+                      <Textarea
+                        value={generateShopifyEmbedCode()}
+                        readOnly
+                        className="bg-slate-900 text-slate-100 font-mono text-xs min-h-[150px]"
+                      />
                       <Button
                         onClick={() => copyToClipboard(generateShopifyEmbedCode())}
                         size="sm"
                         className="absolute top-2 right-2"
                       >
-                        <Copy className="h-4 w-4" />
+                        {copied ? "Copied!" : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
@@ -311,26 +323,6 @@ export default function ShopifyIntegrationPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Method 3: App Development */}
-                <div className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-slate-900">Method 3: Shopify App</h4>
-                    <Badge variant="outline">Advanced</Badge>
-                  </div>
-                  <div className="space-y-3">
-                    <p className="text-sm text-slate-600">Create a custom Shopify app for advanced integration:</p>
-                    <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
-                      <li>Access to Shopify Admin API</li>
-                      <li>Real-time inventory updates</li>
-                      <li>Order management integration</li>
-                      <li>Customer data synchronization</li>
-                    </ul>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      Contact for Custom App Development
-                    </Button>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
@@ -356,9 +348,11 @@ export default function ShopifyIntegrationPage() {
                       File: <code className="bg-slate-100 px-1 rounded">templates/product.liquid</code>
                     </p>
                     <div className="relative">
-                      <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg text-xs overflow-x-auto max-h-64">
-                        <code>{generateLiquidContext()}</code>
-                      </pre>
+                      <Textarea
+                        value={generateLiquidContext()}
+                        readOnly
+                        className="bg-slate-900 text-slate-100 font-mono text-xs min-h-[300px]"
+                      />
                       <Button
                         onClick={() => copyToClipboard(generateLiquidContext())}
                         size="sm"
