@@ -17,8 +17,9 @@ export default function ShopifyIntegrationPage() {
   const [copied, setCopied] = useState(false)
 
   const generateShopifyEmbedCode = () => {
+    // Ensure this baseUrl matches your deployed Vercel app's URL
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://your-voice-agent.vercel.app"
-    // Updated to use the consolidated /api/widget/embed route
+
     return `<!-- AI Voice Agent for Shopify -->
 <script>
 window.shopifyVoiceAgent = {
@@ -35,7 +36,7 @@ window.shopifyVoiceAgent = {
   }
 
   const generateLiquidContext = () => {
-    return `<!-- Shopify Product Context (Add to product pages) -->
+    return `<!-- Enhanced Shopify Context (Add to product pages) -->
 <script>
 window.shopifyContext = {
   product: {
@@ -112,8 +113,9 @@ window.shopifyContext = {
     }
   }
 
-  const shopifyCode = `<!-- AI Voice Agent for Shopify -->
-<script src="https://your-domain.vercel.app/api/widget/embed?platform=shopify"></script>` // Updated to generic embed
+  // This variable is for display purposes only, the actual embed code is generated dynamically
+  const shopifyCodeExample = `<!-- AI Voice Agent for Shopify -->
+<script src="https://your-domain.vercel.app/api/widget/embed?platform=shopify"></script>`
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -328,19 +330,16 @@ window.shopifyContext = {
                   </div>
                 </div>
 
-                {/* Shopify Code */}
+                {/* Shopify Code Example (for reference, not to be copied directly) */}
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h2 className="text-xl font-semibold mb-4">Shopify Code</h2>
+                  <h2 className="text-xl font-semibold mb-4">Shopify Code Example (Do NOT copy this directly)</h2>
                   <div className="bg-gray-900 text-white p-4 rounded-lg">
-                    <code className="text-sm whitespace-pre">{shopifyCode}</code>
+                    <code className="text-sm whitespace-pre">{shopifyCodeExample}</code>
                   </div>
-
-                  <button
-                    onClick={() => navigator.clipboard.writeText(shopifyCode)}
-                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  >
-                    Copy Shopify Code
-                  </button>
+                  <p className="mt-4 text-sm text-red-500">
+                    **IMPORTANT:** Do NOT copy the code from this box. Use the "Copy" button above in Method 1 to get
+                    your personalized embed code.
+                  </p>
                 </div>
               </div>
             </CardContent>
