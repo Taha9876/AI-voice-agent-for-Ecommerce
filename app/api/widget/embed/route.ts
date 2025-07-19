@@ -83,6 +83,7 @@ export async function GET(request: NextRequest) {
       opacity: 0;
       visibility: hidden;
       transform: scale(0.8);
+      display: none; /* NEW: Ensure it's hidden initially */
       transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
     \`;
     widgetContainer.appendChild(iframe);
@@ -92,6 +93,7 @@ export async function GET(request: NextRequest) {
 
   const openWidget = () => {
     isWidgetOpen = true;
+    iframe.style.display = 'block'; /* NEW: Show iframe */
     iframe.style.opacity = '1';
     iframe.style.visibility = 'visible';
     iframe.style.transform = 'scale(1)';
@@ -108,6 +110,9 @@ export async function GET(request: NextRequest) {
     toggleButton.style.opacity = '1'; // Show the button when widget is closed
     toggleButton.style.transform = 'scale(1)';
     iframe.style.zIndex = '9998'; // Send iframe back
+    setTimeout(() => {
+      iframe.style.display = 'none'; /* NEW: Hide iframe after transition */
+    }, 300); // Match transition duration
   };
 
   toggleButton.onclick = function() {
