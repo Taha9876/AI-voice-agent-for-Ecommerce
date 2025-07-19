@@ -10,7 +10,7 @@ import { useState } from "react"
 import { Copy, Code, Settings, ShoppingBag, Zap } from "lucide-react"
 
 export default function ShopifyIntegrationPage() {
-  const [shopifyDomain, setShopifyDomain] = useState("your-store.myshopify.com")
+  const [shopifyDomain, setShopifyDomain] = useState("ornapk.store") // Default to your domain
   const [primaryColor, setPrimaryColor] = useState("#3b82f6")
   const [position, setPosition] = useState("bottom-right")
   const [assistantName, setAssistantName] = useState("AI Shopping Assistant")
@@ -28,11 +28,11 @@ window.shopifyVoiceAgent = {
     name: '${assistantName}',
     primaryColor: '${primaryColor}',
     position: '${position}',
-    shopifyDomain: '${shopifyDomain}'
+    shopifyDomain: '${shopifyDomain}' // Ensure this is just the domain, e.g., "ornapk.store"
   }
 };
 </script>
-<script src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(shopifyDomain)}&color=${encodeURIComponent(primaryColor)}&position=${encodeURIComponent(position)}&name=${encodeURIComponent(assistantName)}" async></script>`
+<script src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(shopifyDomain)}&color=${encodeURIComponent(primaryColor)}&position=${encodeURIComponent(position)}&name=${encodeURIComponent(assistantName)}"></script>`
   }
 
   const generateLiquidContext = () => {
