@@ -84,6 +84,7 @@ export async function GET(request: NextRequest) {
       visibility: hidden;
       transform: scale(0.8);
       display: none; /* NEW: Ensure it's hidden initially */
+      background-color: transparent;
       transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
     \`;
     widgetContainer.appendChild(iframe);

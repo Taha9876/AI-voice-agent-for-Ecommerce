@@ -32,7 +32,7 @@ window.shopifyVoiceAgent = {
   }
 };
 </script>
-<script src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(shopifyDomain)}&color=${encodeURIComponent(primaryColor)}&position=${encodeURIComponent(position)}&name=${encodeURIComponent(assistantName)}"></script>`
+<script defer src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(shopifyDomain)}&color=${encodeURIComponent(primaryColor)}&position=${encodeURIComponent(position)}&name=${encodeURIComponent(assistantName)}"></script>`
   }
 
   const generateLiquidContext = () => {
