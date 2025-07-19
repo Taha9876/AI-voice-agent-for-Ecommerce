@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Mic, MicOff, Volume2, VolumeX, MessageSquare, X, Minimize2, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from "web-speech-api"
+// import type { SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from "web-speech-api"
 
 interface Message {
   id: string
@@ -100,7 +100,7 @@ export default function VoiceWidget({
     recognitionRef.current.interimResults = true
     recognitionRef.current.lang = "en-US"
 
-    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+    recognitionRef.current.onresult = (event: any) => {
       let finalTranscript = ""
       let interimTranscript = ""
 
@@ -121,7 +121,7 @@ export default function VoiceWidget({
       }
     }
 
-    recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+    recognitionRef.current.onerror = (event: any) => {
       let errorMessage = `Speech recognition error: ${event.error}.`
       if (event.error === "not-allowed") {
         errorMessage += " Please allow microphone access in your browser settings for this site."
