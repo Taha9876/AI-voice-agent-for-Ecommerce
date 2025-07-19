@@ -13,10 +13,11 @@ export default function ShopifySetupCheck() {
   const [copied, setCopied] = useState(false)
 
   const generateOptimizedCode = () => {
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://your-voice-agent.vercel.app"
     return `<!-- AI Voice Agent for ${currentDomain} -->
 <script>
 window.shopifyVoiceAgent = {
-  apiUrl: 'https://your-voice-agent.vercel.app', // Replace with your actual domain
+  apiUrl: '${baseUrl}', // Replace with your actual domain
   config: {
     name: 'AI Shopping Assistant',
     primaryColor: '#3b82f6',
@@ -26,7 +27,7 @@ window.shopifyVoiceAgent = {
   }
 };
 </script>
-<script src="https://your-voice-agent.vercel.app/api/shopify/embed?domain=${currentDomain}&color=%233b82f6&position=bottom-right&name=AI%20Shopping%20Assistant" async></script>`
+<script src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(currentDomain)}&color=%233b82f6&position=bottom-right&name=AI%20Shopping%20Assistant" async></script>`
   }
 
   const generateShopifyContext = () => {

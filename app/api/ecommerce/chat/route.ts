@@ -64,11 +64,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 })
     }
 
-    // Build Shopify-aware context prompt
-    let contextPrompt = SHOPIFY_SYSTEM_PROMPT
+    // Build context-aware prompt
+    let systemPrompt = `You are a helpful AI voice assistant. Keep your responses conversational, concise, and natural for voice interaction. Aim for responses that are 1-3 sentences long unless more detail is specifically requested. Be friendly, engaging, and helpful.`
 
     if (context && context.platform === "shopify") {
-      contextPrompt += `\n\nSHOPIFY STORE CONTEXT:
+      systemPrompt = SHOPIFY_SYSTEM_PROMPT // Use specific Shopify prompt
+      systemPrompt += `\n\nSHOPIFY STORE CONTEXT:
       - Store: ${websiteConfig?.name || "Shopify Store"}
       - Current Page: ${context.currentPage || "Unknown"}
       - Page Type: ${getShopifyPageType(context.currentPage)}`
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
       // Add product context
       if (context.shopifyData?.product) {
         const product = context.shopifyData.product
-        contextPrompt += `\n\nCURRENT PRODUCT:
+        systemPrompt += `\n\nCURRENT PRODUCT:
         - Name: ${product.title}
         - Price: $${product.price}
         - Vendor: ${product.vendor}
@@ -85,24 +86,24 @@ export async function POST(request: NextRequest) {
         - Tags: ${product.tags?.join(", ") || "None"}`
 
         if (product.variants && product.variants.length > 0) {
-          contextPrompt += `\n- Variants: ${product.variants.map((v: any) => `${v.title} ($${v.price})`).join(", ")}`
+          systemPrompt += `\n- Variants: ${product.variants.map((v: any) => `${v.title} ($${v.price})`).join(", ")}`
         }
       }
 
       // Add collection context
       if (context.shopifyData?.collection?.title) {
-        contextPrompt += `\n\nCURRENT COLLECTION: ${context.shopifyData.collection.title}`
+        systemPrompt += `\n\nCURRENT COLLECTION: ${context.shopifyData.collection.title}`
       }
 
       // Add cart context
       if (context.shopifyData?.cart) {
         const cart = context.shopifyData.cart
-        contextPrompt += `\n\nCUSTOMER CART:
+        systemPrompt += `\n\nCUSTOMER CART:
         - Items: ${cart.item_count || 0}
         - Total: $${cart.total_price || 0}`
 
         if (cart.items && cart.items.length > 0) {
-          contextPrompt += `\n- Products: ${cart.items.map((item: any) => `${item.product_title} (${item.quantity}x)`).join(", ")}`
+          systemPrompt += `\n- Products: ${cart.items.map((item: any) => `${item.product_title} (${item.quantity}x)`).join(", ")}`
         }
       }
 
@@ -110,27 +111,35 @@ export async function POST(request: NextRequest) {
       if (context.shopifyData?.customer) {
         const customer = context.shopifyData.customer
         if (customer.first_name) {
-          contextPrompt += `\n\nCUSTOMER: ${customer.first_name}`
+          systemPrompt += `\n\nCUSTOMER: ${customer.first_name}`
         }
       }
+    } else if (context) {
+      // Generic website context
+      systemPrompt += `\n\nWEBSITE CONTEXT:
+      - Current Page: ${context.currentPage || "Unknown"}
+      - Page Title: ${context.title || "Unknown"}
+      - URL: ${context.url || "Unknown"}`
+      // Add other generic context if available (e.g., context.products, context.categories)
     }
 
     const { text } = await generateText({
       model: google("gemini-1.5-flash"),
-      system: contextPrompt,
+      system: systemPrompt,
       prompt: message,
     })
 
     // Analyze intent for Shopify-specific actions
-    const intent = analyzeShopifyIntent(message, text, context)
+    const intent = analyzeShopifyIntent(message, text, context) // This function can be made generic later
+    const suggestions = generateShopifySuggestions(intent, context) // This function can be made generic later
 
     return NextResponse.json({
       response: text,
       intent,
-      suggestions: generateShopifySuggestions(intent, context),
+      suggestions,
     })
   } catch (error) {
-    console.error("Error in Shopify chat API:", error)
+    console.error("Error in chat API:", error)
     return NextResponse.json(
       {
         error: "Failed to process chat request",

@@ -18,6 +18,7 @@ export default function ShopifyIntegrationPage() {
 
   const generateShopifyEmbedCode = () => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://your-voice-agent.vercel.app"
+    // Updated to use the consolidated /api/widget/embed route
     return `<!-- AI Voice Agent for Shopify -->
 <script>
 window.shopifyVoiceAgent = {
@@ -30,7 +31,7 @@ window.shopifyVoiceAgent = {
   }
 };
 </script>
-<script src="${baseUrl}/api/shopify/embed" async></script>`
+<script src="${baseUrl}/api/widget/embed?platform=shopify&domain=${encodeURIComponent(shopifyDomain)}&color=${encodeURIComponent(primaryColor)}&position=${encodeURIComponent(position)}&name=${encodeURIComponent(assistantName)}" async></script>`
   }
 
   const generateLiquidContext = () => {
@@ -112,7 +113,7 @@ window.shopifyContext = {
   }
 
   const shopifyCode = `<!-- AI Voice Agent for Shopify -->
-<script src="https://your-domain.vercel.app/api/shopify/embed"></script>`
+<script src="https://your-domain.vercel.app/api/widget/embed?platform=shopify"></script>` // Updated to generic embed
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
