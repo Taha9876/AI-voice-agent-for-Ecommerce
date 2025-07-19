@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { ProviderSelector } from "@/components/provider-selector"
 import { VoiceVisualizer } from "@/components/voice-visualizer"
 import { APIStatus } from "@/components/api-status"
+import type { SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from "web-speech-api"
 
 interface Message {
   id: string
@@ -38,49 +39,75 @@ export default function VoiceAgent() {
 
   useEffect(() => {
     // Initialize Speech Recognition
-    if (typeof window !== "undefined") {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (typeof window === "undefined") return
 
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition()
+    // Check for secure context (HTTPS)
+    if (!window.isSecureContext) {
+      setError(
+        "Microphone access requires a secure (HTTPS) connection. Please ensure your website is served over HTTPS.",
+      )
+      return
+    }
 
-        if (recognitionRef.current) {
-          recognitionRef.current.continuous = true
-          recognitionRef.current.interimResults = true
-          recognitionRef.current.lang = "en-US"
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
-          recognitionRef.current.onresult = (event: any) => {
-            let finalTranscript = ""
-            let interimTranscript = ""
+    if (!SpeechRecognition) {
+      setError("Speech recognition not supported in this browser. Please use Chrome, Edge, or Safari.")
+      return
+    }
 
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-              const transcript = event.results[i][0].transcript
-              if (event.results[i].isFinal) {
-                finalTranscript += transcript
-              } else {
-                interimTranscript += transcript
-              }
-            }
+    recognitionRef.current = new SpeechRecognition()
 
-            setTranscript(finalTranscript || interimTranscript)
+    if (recognitionRef.current) {
+      recognitionRef.current.continuous = true
+      recognitionRef.current.interimResults = true
+      recognitionRef.current.lang = "en-US"
 
-            if (finalTranscript) {
-              handleUserMessage(finalTranscript)
-              setTranscript("")
-            }
-          }
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+        let finalTranscript = ""
+        let interimTranscript = ""
 
-          recognitionRef.current.onerror = (event: any) => {
-            setError(`Speech recognition error: ${event.error}`)
-            setIsListening(false)
-          }
-
-          recognitionRef.current.onend = () => {
-            setIsListening(false)
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript
+          } else {
+            interimTranscript += transcript
           }
         }
-      } else {
-        setError("Speech recognition not supported in this browser. Please use Chrome, Edge, or Safari.")
+
+        setTranscript(finalTranscript || interimTranscript)
+
+        if (finalTranscript) {
+          handleUserMessage(finalTranscript)
+          setTranscript("")
+        }
+      }
+
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+        let errorMessage = `Speech recognition error: ${event.error}.`
+        if (event.error === "not-allowed") {
+          errorMessage += " Please allow microphone access in your browser settings for this site."
+        } else if (event.error === "no-speech") {
+          errorMessage += " No speech detected. Please try again."
+        } else if (event.error === "aborted") {
+          errorMessage += " Speech recognition was stopped."
+        } else if (event.error === "network") {
+          errorMessage += " Network error. Check your internet connection."
+        } else if (event.error === "audio-capture") {
+          errorMessage += " No microphone found or audio capture failed."
+        }
+        setError(errorMessage)
+        setIsListening(false)
+        console.error("Speech recognition error:", event.error, event.message)
+      }
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false)
+      }
+
+      recognitionRef.current.onstart = () => {
+        setError(null) // Clear any previous errors when starting
       }
     }
 
@@ -164,7 +191,7 @@ export default function VoiceAgent() {
 
   const generateSpeech = (text: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
-      console.error("Speech Synthesis not supported in this browser")
+      console.warn("Speech Synthesis not supported in this browser.")
       return
     }
 

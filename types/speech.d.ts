@@ -1,3 +1,6 @@
+// This file defines global types for Web Speech API, which are used in the widget.
+// No external package import is needed for these standard browser types.
+
 interface SpeechRecognition extends EventTarget {
   continuous: boolean
   interimResults: boolean
@@ -42,4 +45,7 @@ interface SpeechRecognitionErrorEvent extends Event {
 interface Window {
   SpeechRecognition: any
   webkitSpeechRecognition: any
+  isSecureContext: boolean // Added for explicit check
+  speechSynthesis: SpeechSynthesis // Added for explicit check
+  shopifyContext?: any // Global object for Shopify context
 }

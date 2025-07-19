@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Mic, MicOff, Volume2, VolumeX, MessageSquare, X, Minimize2, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
-// import type { SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from "web-speech-api"
 
 interface Message {
   id: string
@@ -324,7 +323,6 @@ export default function VoiceWidget({
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto mb-3 space-y-2 pr-1">
-                {" "}
                 {/* Added pr-1 for scrollbar */}
                 {messages.length === 0 ? (
                   <div className="text-center py-4 text-slate-500">
@@ -379,7 +377,6 @@ export default function VoiceWidget({
 
               {/* Controls */}
               <div className="flex gap-2 mt-auto">
-                {" "}
                 {/* mt-auto pushes controls to bottom */}
                 <Button
                   onClick={isListening ? stopListening : startListening}

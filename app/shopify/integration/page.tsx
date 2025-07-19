@@ -39,66 +39,66 @@ window.shopifyVoiceAgent = {
     return `<!-- Enhanced Shopify Context (Add to product pages) -->
 <script>
 window.shopifyContext = {
-  product: {
-    {% if product %}
-    id: {{ product.id }},
-    title: "{{ product.title | escape }}",
-    price: {{ product.price | money_without_currency }},
-    compare_price: {{ product.compare_at_price | money_without_currency }},
-    vendor: "{{ product.vendor | escape }}",
-    type: "{{ product.type | escape }}",
-    tags: [{% for tag in product.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
-    available: {{ product.available }},
-    variants: [
-      {% for variant in product.variants %}
-      {
-        id: {{ variant.id }},
-        title: "{{ variant.title | escape }}",
-        price: {{ variant.price | money_without_currency }},
-        available: {{ variant.available }},
-        inventory_quantity: {{ variant.inventory_quantity }}
-      }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ],
-    images: [
-      {% for image in product.images %}
-      "{{ image | img_url: 'master' }}"{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ]
-    {% endif %}
-  },
-  collection: {
-    {% if collection %}
-    title: "{{ collection.title | escape }}",
-    handle: "{{ collection.handle }}",
-    description: "{{ collection.description | escape }}"
-    {% endif %}
-  },
-  cart: {
-    item_count: {{ cart.item_count }},
-    total_price: {{ cart.total_price | money_without_currency }},
-    items: [
-      {% for item in cart.items %}
-      {
-        product_title: "{{ item.product.title | escape }}",
-        variant_title: "{{ item.variant.title | escape }}",
-        quantity: {{ item.quantity }},
-        price: {{ item.price | money_without_currency }}
-      }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ]
-  },
-  customer: {
-    {% if customer %}
-    first_name: "{{ customer.first_name | escape }}",
-    email: "{{ customer.email | escape }}",
-    tags: [{% for tag in customer.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
-    {% else %}
-    logged_in: false
-    {% endif %}
-  },
-  page_type: "{{ request.page_type }}",
-  template: "{{ template }}"
+product: {
+  {% if product %}
+  id: {{ product.id }},
+  title: "{{ product.title | escape }}",
+  price: {{ product.price | money_without_currency }},
+  compare_price: {{ product.compare_at_price | money_without_currency }},
+  vendor: "{{ product.vendor | escape }}",
+  type: "{{ product.type | escape }}",
+  tags: [{% for tag in product.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
+  available: {{ product.available }},
+  variants: [
+    {% for variant in product.variants %}
+    {
+      id: {{ variant.id }},
+      title: "{{ variant.title | escape }}",
+      price: {{ variant.price | money_without_currency }},
+      available: {{ variant.available }},
+      inventory_quantity: {{ variant.inventory_quantity }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  images: [
+    {% for image in product.images %}
+    "{{ image | img_url: 'master' }}"{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% endif %}
+},
+collection: {
+  {% if collection %}
+  title: "{{ collection.title | escape }}",
+  handle: "{{ collection.handle }}",
+  description: "{{ collection.description | escape }}"
+  {% endif %}
+},
+cart: {
+  item_count: {{ cart.item_count }},
+  total_price: {{ cart.total_price | money_without_currency }},
+  items: [
+    {% for item in cart.items %}
+    {
+      product_title: "{{ item.product.title | escape }}",
+      variant_title: "{{ item.variant.title | escape }}",
+      quantity: {{ item.quantity }},
+      price: {{ item.price | money_without_currency }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+},
+customer: {
+  {% if customer %}
+  first_name: "{{ customer.first_name | escape }}",
+  email: "{{ customer.email | escape }}",
+  tags: [{% for tag in customer.tags %}"{{ tag | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
+  {% else %}
+  logged_in: false
+  {% endif %}
+},
+page_type: "{{ request.page_type }}",
+template: "{{ template }}"
 };
 </script>`
   }

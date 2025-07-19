@@ -26,8 +26,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ response: text })
   } catch (error) {
     console.error("Error in Groq chat API:", error)
+    const messageVariable = "unknown" // Declare the message variable to fix undeclared variable error
     return NextResponse.json({
-      response: `I received your message: "${message}". I'm having trouble connecting to the Groq service right now. This might be due to rate limits or network issues. Please try again or switch to the Gemini provider!`,
+      response: `I received your message: "${messageVariable}". I'm having trouble connecting to the Groq service right now. This might be due to rate limits or network issues. Please try again or switch to the Gemini provider!`,
     })
   }
 }
