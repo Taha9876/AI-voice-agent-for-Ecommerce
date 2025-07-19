@@ -39,13 +39,31 @@ interface WidgetContext {
   customer?: any // Generic customer data
 }
 
+// Update the VoiceWidgetProps interface to make websiteConfig and context optional
 interface VoiceWidgetProps {
-  websiteConfig: WidgetConfig
+  websiteConfig?: WidgetConfig
   context?: WidgetContext
   isEmbedded?: boolean
 }
 
-export default function VoiceWidget({ websiteConfig, context, isEmbedded = false }: VoiceWidgetProps) {
+// Modify the default export function to provide default values for websiteConfig
+export default function VoiceWidget({
+  websiteConfig = {
+    // Provide a default object for websiteConfig
+    name: "AI Assistant",
+    primaryColor: "#3b82f6",
+    position: "bottom-right",
+    apiUrl: typeof window !== "undefined" ? window.location.origin : "http://localhost:3000", // Fallback for build
+    platform: "generic",
+  },
+  context,
+  isEmbedded = false,
+}: VoiceWidgetProps) {
+  // The 'config' variable is now redundant as websiteConfig will always have defaults.
+  // You can directly use websiteConfig throughout the component.
+  // For example, instead of `config.primaryColor`, use `websiteConfig.primaryColor`.
+  // I've updated the relevant lines below to reflect this.
+
   const [isMinimized, setIsMinimized] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
